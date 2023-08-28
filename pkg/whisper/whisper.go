@@ -1,5 +1,3 @@
-// whisper/whisper.go
-
 package whisper
 
 import (
@@ -12,19 +10,13 @@ import (
 	"os"
 
 	"github.com/go-resty/resty/v2"
+	"github.com/joho/godotenv"
 )
 
 type Segment struct {
 	Start float64 `json:"start"`
 	End   float64 `json:"end"`
 	Text  string  `json:"text"`
-	// WholeWordTimestamps []struct {
-	// 	Word        string  `json:"word"`
-	// 	Start       float64 `json:"start"`
-	// 	End         float64 `json:"end"`
-	// 	Probability float64 `json:"probability"`
-	// 	Timestamp   float64 `json:"timestamp"`
-	// } `json:"whole_word_timestamps"`
 }
 type WhisperResponse struct {
 	Text     string        `json:"text"`
@@ -32,13 +24,24 @@ type WhisperResponse struct {
 	Segments []srt.Segment `json:"segments"`
 }
 
+var VIDEO_UPLOAD_PATH string
+
 func Whisper(w http.ResponseWriter, r *http.Request) {
-	url := "https://transcribe.whisperapi.com"
-	headers := map[string]string{
-		"Authorization": "Bearer WDLSUBC9KD6T6RJDXTSKRWNQHPJL36SZ",
+	// 載入 .env 檔案中的環境變數
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
 	}
 
-	audioPath := "/home/roy/go_subtitle/uploads/audio.mp3"
+	VIDEO_UPLOAD_PATH = os.Getenv("VIDEO_UPLOAD_PATH")
+
+	WHISPER_API_KEY := os.Getenv("WHISPER_API_KEY")
+	url := "https://transcribe.whisperapi.com"
+	headers := map[string]string{
+		"Authorization": "Bearer " + WHISPER_API_KEY,
+	}
+
+	audioPath := VIDEO_UPLOAD_PATH + "audio.mp3"
 	audioFile, err := os.Open(audioPath)
 	if err != nil {
 		log.Println("Failed to open audio file", err)

@@ -10,13 +10,6 @@ type Segment struct {
 	Start float64 `json:"start"`
 	End   float64 `json:"end"`
 	Text  string  `json:"text"`
-	// WholeWordTimestamps []struct {
-	// 	Word        string  `json:"word"`
-	// 	Start       float64 `json:"start"`
-	// 	End         float64 `json:"end"`
-	// 	Probability float64 `json:"probability"`
-	// 	Timestamp   float64 `json:"timestamp"`
-	// } `json:"whole_word_timestamps"`
 }
 type WhisperResponse struct {
 	Text     string    `json:"text"`
