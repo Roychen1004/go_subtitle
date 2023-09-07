@@ -44,16 +44,16 @@ func Whisper(w http.ResponseWriter, r *http.Request) {
 	audioPath := VIDEO_UPLOAD_PATH + "audio.mp3"
 	audioFile, err := os.Open(audioPath)
 	if err != nil {
-		log.Println("Failed to open audio file", err)
-		http.Error(w, "Failed to open audio file", http.StatusInternalServerError)
+		log.Println("Failed to open audio file:", err)
+		http.Error(w, "Failed to open audio file:", http.StatusInternalServerError)
 		return
 	}
 	defer audioFile.Close()
 
 	audioData, err := io.ReadAll(audioFile)
 	if err != nil {
-		log.Println("Failed to read audio data", err)
-		http.Error(w, "Failed to read audio data", http.StatusInternalServerError)
+		log.Println("Failed to read audio data:", err)
+		http.Error(w, "Failed to read audio data:", http.StatusInternalServerError)
 		return
 	}
 
@@ -73,16 +73,16 @@ func Whisper(w http.ResponseWriter, r *http.Request) {
 
 	response, err := req.Post(url)
 	if err != nil {
-		log.Println("Failed to send request", err)
-		http.Error(w, "Failed to send request", http.StatusInternalServerError)
+		log.Println("Failed to send request:", err)
+		http.Error(w, "Failed to send request:", http.StatusInternalServerError)
 		return
 	}
 
 	var whisperResponse WhisperResponse
 	err = json.Unmarshal(response.Body(), &whisperResponse)
 	if err != nil {
-		log.Println("Failed to parse Whisper response", err)
-		http.Error(w, "Failed to parse Whisper response", http.StatusInternalServerError)
+		log.Println("Failed to parse Whisper response:", err)
+		http.Error(w, "Failed to parse Whisper response:", http.StatusInternalServerError)
 		return
 	}
 
@@ -99,8 +99,8 @@ func Whisper(w http.ResponseWriter, r *http.Request) {
 	}, subtitlePath)
 
 	if err != nil {
-		log.Println("Failed to generate .srt file", err)
-		http.Error(w, "Failed to generate .srt file", http.StatusInternalServerError)
+		log.Println("Failed to generate .srt file:", err)
+		http.Error(w, "Failed to generate .srt file:", http.StatusInternalServerError)
 		return
 	}
 

@@ -45,7 +45,7 @@ func SubtitleHandler(w http.ResponseWriter, r *http.Request) {
 
 	err := os.MkdirAll(VIDEO_OUTPUT_PATH, 0755)
 	if err != nil {
-		log.Println("Failed to create output directory", err)
+		log.Println("Failed to create output directory:", err)
 		http.Error(w, "Failed to create output directory", http.StatusInternalServerError)
 		return
 	}
@@ -65,32 +65,33 @@ func SubtitleHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("字幕已成功添加到影片中，輸出影片：", outputPath)
 	// uploadDir := "/home/roy/go_subtitle/uploads/"
 	// 刪除 uploadDir 底下所有檔案
-	err_remove := os.RemoveAll(VIDEO_UPLOAD_PATH)
-	if err != nil {
-		log.Println("Failed to delete uploaded files", err_remove)
-	}
+	// err_remove := os.RemoveAll(VIDEO_UPLOAD_PATH)
+	// if err != nil {
+	// 	log.Println("Failed to delete uploaded files:", err_remove)
+	// }
 }
 
 func UploadHandler(w http.ResponseWriter, r *http.Request) {
 
 	err_env := godotenv.Load()
 	if err_env != nil {
+		log.Println("Error loading .env file:", err_env)
 		log.Fatal("Error loading .env file")
 	}
 
 	VIDEO_UPLOAD_PATH = os.Getenv("VIDEO_UPLOAD_PATH")
 
 	if r.Method != http.MethodPost {
-		log.Println("Method not allowed")
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		log.Println("Method not allowed:")
+		http.Error(w, "Method not allowed:", http.StatusMethodNotAllowed)
 		return
 	}
 
 	// Parse uploaded file
 	file, _, err := r.FormFile("video")
 	if err != nil {
-		log.Println("Failed to read file", err)
-		http.Error(w, "Failed to read file", http.StatusInternalServerError)
+		log.Println("Failed to read file:", err)
+		http.Error(w, "Failed to read file:", http.StatusInternalServerError)
 		return
 	}
 	defer file.Close()
@@ -99,7 +100,7 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	// uploadDir := "/home/roy/go_subtitle/uploads"
 	err = os.MkdirAll(VIDEO_UPLOAD_PATH, 0755)
 	if err != nil {
-		log.Println("Failed to create upload directory", err)
+		log.Println("Failed to create upload directory:", err)
 		http.Error(w, "Failed to create upload directory", http.StatusInternalServerError)
 		return
 	}
