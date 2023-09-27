@@ -1,26 +1,34 @@
 # 使用官方的 Go 映像作為基礎映像
 FROM golang:1.21
 
-# 設定環境變數
-ENV PORT=30046
+# # 設定環境變數
+# ENV PORT=30037
 
-# 暴露指定的端口
-EXPOSE $PORT
+# # 暴露指定的端口
+# EXPOSE $PORT
 
 # 設定工作目錄為應用程式根目錄
 WORKDIR /app
 
-# 複製go.mod和go.sum以便進行依賴管理
-COPY go.mod go.sum ./
-
-# 下載並安裝依賴
-RUN go mod download
-
-# 複製整個應用程式到容器內
+# 複製整個專案到容器中
 COPY . .
 
-# 編譯應用程式
-RUN go build -o main ./cmd
+RUN ls -a
 
-# 指定執行時的命令
-CMD ["./main"]
+# 下載專案的依賴
+RUN go mod download
+
+RUN ls -a
+
+# 設定工作目錄
+WORKDIR /app/cmd
+
+RUN ls -a
+
+# 編譯專案
+RUN go build -o my-golang
+
+COPY .env /app/cmd
+
+# 指定容器執行時運行的命令
+CMD ["./my-golang"]

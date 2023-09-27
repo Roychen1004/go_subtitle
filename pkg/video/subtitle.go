@@ -3,6 +3,7 @@ package video
 import (
 	// "bytes"
 	// "encoding/json"
+	"encoding/json"
 	"fmt"
 	"go_subtitle/pkg/srt"
 	"io"
@@ -69,6 +70,28 @@ func SubtitleHandler(w http.ResponseWriter, r *http.Request) {
 	// if err != nil {
 	// 	log.Println("Failed to delete uploaded files:", err_remove)
 	// }
+
+	// 創建包含下載連結的JSON回應
+	jsonResponse := map[string]string{"download_url": outputPath}
+	responseJSON, err := json.Marshal(jsonResponse)
+	if err != nil {
+		log.Println("無法生成JSON回應:", err)
+		http.Error(w, "無法生成JSON回應", http.StatusInternalServerError)
+		return
+	}
+	// log.Println("responseJSON:", responseJSON)
+
+	// 設置HTTP標頭
+	w.Header().Set("Content-Type", "application/json")
+
+	// 寫入JSON回應到HTTP回應
+	_, err = w.Write(responseJSON)
+	if err != nil {
+		log.Println("無法寫入JSON回應:", err)
+		http.Error(w, "無法寫入JSON回應", http.StatusInternalServerError)
+		return
+	}
+
 }
 
 func UploadHandler(w http.ResponseWriter, r *http.Request) {

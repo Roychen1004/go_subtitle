@@ -2,3 +2,4 @@ uploads
 output
 .env
 .gitignore
+.dockerignore
